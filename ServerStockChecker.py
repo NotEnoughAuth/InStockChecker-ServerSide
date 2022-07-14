@@ -4,10 +4,11 @@ import websockets
 
 async def handler(websocket):
     while True:
+        await websocket.send("AHH")
         try:
             message = await websocket.recv()
         except websockets.ConnectionClosedOK:
-            print("###Connection Closed###")
+            print("### Connection Closed ###")
             break
         print(message)
 
