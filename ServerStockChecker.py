@@ -22,19 +22,15 @@ async def handler(websocket):
     print(websocket.id)
     if await websocket.recv() == "ping":
         await websocket.send("pong")
-    await websocket.send("Please enter urls that you want to check stock availability on (enter STOP to continue)")
-    while True:
         while True:
             try:
                 message = await websocket.recv()
-                if message.upper() == 'STOP':
-                    await websocket.send('Stoping URL Entering')
+                if message == 'EndOfURLTransmission':
                     break
-                print('Got the message: ' + message)
                 await newUrl(message)
+                await websocket.send("Final URL Sent!")
             except websockets.ConnectionClosedOK:
                 print("### Connection Closed ###")
-                break
         time.sleep(1)
         x += 1
         await websocket.send(str(x) + " seconds")
@@ -49,7 +45,7 @@ def checkStock():
             prod[i][2] = (CheckStock.checkinstock(url))
             if prod[i][2] != prod[i][1]:
                 FileManager.logProduct(prod)
-            print(prod[i][2])
+            # print(prod[i][2])
         time.sleep(30)
 
 
